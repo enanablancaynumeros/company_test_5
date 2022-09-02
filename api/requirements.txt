@@ -1,0 +1,7 @@
+alembic==1.8.1
+fastapi==0.81.0
+pydantic==1.10.1
+sqlalchemy==1.4.40
+uvicorn[standard]==0.18.3
+sqlalchemy_utils==0.38.3
+psycopg2-binary==2.9.3

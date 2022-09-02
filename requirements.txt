@@ -1,0 +1,8 @@
+-r api/requirements.txt
+-r tests/requirements.txt
+
+-e api
+
+docker-compose==1.29.2
+black==22.8.0
+isort==5.10.1
