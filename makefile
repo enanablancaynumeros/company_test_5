@@ -28,7 +28,6 @@ tests_locally:
 	POSTGRES_HOST=localhost \
 	pytest tests/integration -s
 
-
 alembic_generate:
 	$(DOCKER_ENV_ARGS) \
 	POSTGRES_HOST=localhost \
@@ -36,6 +35,7 @@ alembic_generate:
 
 run_locally:
 	$(DOCKER_ENV_ARGS) \
+	POSTGRES_HOST=localhost \
 	uvicorn api.phone_api.api_endpoints:app --reload --port 8000
 
 up: build

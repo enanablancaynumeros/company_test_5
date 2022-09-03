@@ -1,9 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 
-from .handler import CallsHandler
-from .schemas import Call
+from .db_connection import recreate_postgres_metadata
+from .handlers import CallsHandler
+from .schemas import CallSchema
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup_event():
+    recreate_postgres_metadata()
 
 
 @app.get(path="/ping")
@@ -11,10 +17,9 @@ async def ping():
     return "pong"
 
 
-@app.post(path="/call")
-async def post_customer_call(call: Call):
-    res = CallsHandler.save_user_call(call=call)
-    return {"message": "Hello World"}
+@app.post(path="/call", status_code=status.HTTP_201_CREATED)
+async def post_customer_call(call: CallSchema):
+    return CallsHandler.save_user_call(call=call)
 
 
 @app.get(path="/phone/{phone_id}/history")
