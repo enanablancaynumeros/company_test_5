@@ -24,9 +24,10 @@ tests_docker: build
 	$(DOCKER_DEV) run tests
 
 tests_locally:
+	cd tests && \
 	$(DOCKER_ENV_ARGS) \
 	POSTGRES_HOST=localhost \
-	pytest tests/integration -s
+	pytest -m "not sample_fixtures" integration -s
 
 alembic_generate:
 	$(DOCKER_ENV_ARGS) \
@@ -44,3 +45,11 @@ up: build
 docker_api_bash: ## Run and execute into the API container
 	$(DOCKER_DEV) run --rm --service-ports --entrypoint bash api
 
+generate_db_png:
+	$(DOCKER_ENV_ARGS) \
+	POSTGRES_HOST=localhost \
+	bash bin/generate_db_png.sh
+
+generate_fixtures:
+	$(DOCKER_ENV_ARGS) \
+	$(DOCKER_DEV) run --entrypoint pytest tests -m "sample_fixtures"

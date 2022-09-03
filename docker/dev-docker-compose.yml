@@ -35,6 +35,6 @@ services:
       dockerfile: docker/tests.Dockerfile
     env_file:
       - .env
-    command: pytest tests/integration/
+    command: pytest -m "not sample_fixtures" tests/integration/
     depends_on:
       - api
