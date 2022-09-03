@@ -46,7 +46,7 @@ To run the tests execute `make tests_docker`
 # Assumptions and additional questions 
 - I've never done an API in fastAPI before, but I have been reading many good things about it and wanted to give it a try to learn something new. 
 - To solve having different billing plans:
-  - First of all we need a set of plans associated to each phone number and customer on 1-1 relationship to phone.
+  - First of all we need a new table for plans associated on a 1-1 relationship to phone, so that we can charge correctly each phone of each customer.
   - Prepaid: We could have an endpoint where the phone operator could check how many seconds the plan has left before starting the call, so they would know when to cut the call if exceeded.
   - Fixed amount per month, understood as the customer pays a fixed amount per month and has infinite calls would only change the way we send invoices. The task that should be in charge of sending the invoices in emails (via sendgrid) would check the monthly plans and ignore the calls for the calculation.
   - To support the use case of invoices generated and sent on every first day of the month, we'd need some cron job orchestration and individual tasks per customer and phone that we can run in parallel, for which I'd use celery/rabbitmq with celery beat to signal the tasks on a fixed date.
