@@ -4,6 +4,8 @@ from .data_models import CallsDBModel, CustomerDBModel, PhoneDBModel
 from .db_connection import session_scope
 from .schemas import CallSchema
 
+FIXED_RATE_PER_MINUTE = 0.02
+
 
 class CallsHandler:
     @classmethod
@@ -36,6 +38,20 @@ class CallsHandler:
             ):
                 # Implemented as a generator to flag the issue that this could yield a huge list
                 yield call
+
+    @classmethod
+    def get_phone_invoice_info(cls, phone_id: int) -> dict:
+        total_minutes = 0
+        calls = []
+        for call in cls.get_user_calls(phone_id=phone_id):
+            calls.append(dict(call.__dict__))
+            total_minutes += call.duration_in_minutes
+        total_cost = total_minutes * FIXED_RATE_PER_MINUTE
+        return {
+            "total_cost": total_cost,
+            "total_minutes": total_minutes,
+            "calls": calls,
+        }
 
 
 class CustomerHandler:

@@ -9,6 +9,8 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event():
+    # In a real world application we would orchestrate this differently before the API deployment,
+    # but this is sufficient for the exercise
     recreate_postgres_metadata()
 
 
@@ -25,3 +27,8 @@ async def post_customer_call(call: CallSchema):
 @app.get(path="/phone/{phone_id}/history")
 async def get_phone_calls_history(phone_id: int):
     return CallsHandler.get_user_calls(phone_id=phone_id)
+
+
+@app.get(path="/phone/{phone_id}/invoice")
+async def get_phone_invoice(phone_id: int):
+    return CallsHandler.get_phone_invoice_info(phone_id=phone_id)

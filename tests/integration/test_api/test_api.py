@@ -5,7 +5,8 @@ from http import HTTPStatus
 import pytest
 from starlette import status
 
-from api.phone_api.api_endpoints import (app, get_phone_calls_history, ping,
+from api.phone_api.api_endpoints import (app, get_phone_calls_history,
+                                         get_phone_invoice, ping,
                                          post_customer_call)
 from api.phone_api.schemas import CallSchema
 from tests.integration.conftest import CUSTOMER_PHONE, FREEZE_DATE
@@ -80,3 +81,37 @@ def test_post_user_call(client, customer_with_phone):
     assert len(response.json()) == 1
     assert response.json()[0]["duration_in_minutes"] == 3
     assert response.json()[0]["target_number"] == "random"
+
+
+@pytest.mark.freeze_time(FREEZE_DATE)
+def test_get_invoice(client, customer_with_phone, calls):
+    url = app.url_path_for(
+        get_phone_invoice.__name__, phone_id=customer_with_phone["id"]
+    )
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()["total_cost"] == 0.22
+    assert response.json()["total_minutes"] == 11
+    calls = response.json()["calls"]
+    for call in calls:
+        assert call.pop("created")
+        assert call.pop("id")
+    import ipdb
+
+    ipdb.set_trace()
+    assert calls == [
+        {
+            "duration_in_minutes": 1,
+            "target_number": "0001",
+            "start_time": f"{FREEZE_DATE}T00:00:00",
+            "updated": None,
+            "phone_id": customer_with_phone["id"],
+        },
+        {
+            "duration_in_minutes": 10,
+            "target_number": "0002",
+            "start_time": f"{FREEZE_DATE}T00:00:00",
+            "updated": None,
+            "phone_id": customer_with_phone["id"],
+        },
+    ]

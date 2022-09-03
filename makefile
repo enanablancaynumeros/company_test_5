@@ -27,7 +27,7 @@ tests_locally:
 	cd tests && \
 	$(DOCKER_ENV_ARGS) \
 	POSTGRES_HOST=localhost \
-	pytest -m "not sample_fixtures" integration -s
+	pytest -s -m "not sample_fixtures" integration
 
 alembic_generate:
 	$(DOCKER_ENV_ARGS) \
@@ -42,14 +42,11 @@ run_locally:
 up: build
 	$(DOCKER_DEV) up --remove-orphans api
 
-docker_api_bash: ## Run and execute into the API container
-	$(DOCKER_DEV) run --rm --service-ports --entrypoint bash api
-
 generate_db_png:
 	$(DOCKER_ENV_ARGS) \
 	POSTGRES_HOST=localhost \
 	bash bin/generate_db_png.sh
 
-generate_fixtures:
+fixtures:
 	$(DOCKER_ENV_ARGS) \
 	$(DOCKER_DEV) run --entrypoint pytest tests -m "sample_fixtures"

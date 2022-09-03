@@ -24,11 +24,11 @@ Additional task:
 Describe how you would extend the solution to be able to support different billing plans like prepaid and
 fixed amount per month.
 
-## How to run
+## How to run the API
 
-Having docker and docker-compose (1.29.2) installed run `make build up` to get the API running in the forefront.
+Having docker and docker-compose (1.29.2) installed run `make up` to get the API running in the forefront.
 By default, it won't have any data, and there are no endpoints to create customers and phones associated.
-To be able to interact with the API, you can run `make generate_fixtures` and then go to `http://localhost:8000/docs` and use
+To be able to interact with the API, you can run `make fixtures` and then go to `http://localhost:8000/docs` and use
 the swagger helpers or use the endpoints directly as follows:
 
 ```bash 
@@ -42,3 +42,12 @@ To run the tests execute `make tests_docker`
 ## DB models
 
 ![DB entity-relation diagram](./bin/db_entities.png)
+
+## Assumptions and additional questions 
+- I've never done an API in fastAPI before, but I have been reading many good things about it and wanted to give it a try to learn something new. 
+- To solve having different billing plans:
+  - First of all we need a set of plans associated to each phone number/customer 1-1.
+  - Prepaid: We could have an endpoint where the phone operator could check how many seconds the plan has left before starting the call, so they would know when to cut the call if exceeded.
+  - Fixed amount per month, understood as the customer pays a fixed amount per month and has infinite calls would only change the way we send invoices. The task that should be in charge of sending the invoices in emails would check the monthly plans and ignore the calls for the calculation.
+  - To support the use case of invoices generated and sent on every first day of the month we need some cron job orchestration and individual tasks per customer and phone that we can run in parallel, for which I'd use celery/rabbitmq with celery beat to signal the tasks on a fixed date.
+  - If the invoices are generated on different dates depending on the user and plan, then we will need to periodically start a task that filters the user specifications.
