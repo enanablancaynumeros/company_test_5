@@ -1,5 +1,5 @@
 # Phone billing system
-
+### Problem statement:
 Implement a very simple phone billing system as a microservice using python.
 - The microservice must be able to:
 - Receive number of minutes for each customer call
@@ -8,14 +8,14 @@ Implement a very simple phone billing system as a microservice using python.
 To keep it simple we will consider we are handling only postpaid monthly plans and a flat rate of US$
 0.02 per minute.
 
-Other requirements:
+#### Other requirements:
 - The system must have a database where call history and invoices are stored (you can use any
 database).
 - You can use any framework you believe best fits to the solution.
 - Keep your code as clean as possible and implement unit tests.
 - Provide code base and instructions to build and run your microservice.
 
-Use cases:
+#### Use cases:
 - As a phone operator I want all customer calls to be charged.
 - As a customer I want to be able to see my phone call history.
 - As a customer I want to receive my invoice every first day of the month.
@@ -24,7 +24,7 @@ Additional task:
 Describe how you would extend the solution to be able to support different billing plans like prepaid and
 fixed amount per month.
 
-## How to run the API
+# How to run the API
 
 Having docker and docker-compose (1.29.2) installed run `make up` to get the API running in the forefront.
 By default, it won't have any data, and there are no endpoints to create customers and phones associated.
@@ -39,11 +39,11 @@ curl -X 'GET' \
 
 To run the tests execute `make tests_docker`
 
-## DB models
+# DB models
 
 ![DB entity-relation diagram](./bin/db_entities.png)
 
-## Assumptions and additional questions 
+# Assumptions and additional questions 
 - I've never done an API in fastAPI before, but I have been reading many good things about it and wanted to give it a try to learn something new. 
 - To solve having different billing plans:
   - First of all we need a set of plans associated to each phone number and customer on 1-1 relationship to phone.
