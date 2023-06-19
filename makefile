@@ -26,27 +26,12 @@ tests_docker: build
 tests_locally:
 	cd tests && \
 	$(DOCKER_ENV_ARGS) \
-	POSTGRES_HOST=localhost \
-	pytest -s -m "not sample_fixtures" integration
-
-alembic_generate:
-	$(DOCKER_ENV_ARGS) \
-	POSTGRES_HOST=localhost \
-	python -c "from phone_api.alembic.utils import alembic_autogenerate; alembic_autogenerate()"
+	pytest -s integration
 
 run_locally:
 	$(DOCKER_ENV_ARGS) \
 	POSTGRES_HOST=localhost \
-	uvicorn api.phone_api.api_endpoints:app --reload --port 8000
+	uvicorn api.flights_api.api_endpoints:app --reload --port 8000
 
 up: build
 	$(DOCKER_DEV) up --remove-orphans api
-
-generate_db_png:
-	$(DOCKER_ENV_ARGS) \
-	POSTGRES_HOST=localhost \
-	bash bin/generate_db_png.sh
-
-fixtures:
-	$(DOCKER_ENV_ARGS) \
-	$(DOCKER_DEV) run --entrypoint pytest tests -m "sample_fixtures"

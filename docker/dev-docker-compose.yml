@@ -10,7 +10,7 @@ services:
       - .env
     ports:
       - "${API_PORT}:${API_PORT}"
-    command: "uvicorn phone_api.api_endpoints:app --host 0.0.0.0 --port ${API_PORT}"
+    command: "uvicorn flights_api.api_endpoints:app --host 0.0.0.0 --port ${API_PORT}"
     depends_on:
       - postgres
 
